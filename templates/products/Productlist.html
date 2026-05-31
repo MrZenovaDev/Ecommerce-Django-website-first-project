@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title%}Products Page {% endblock %}
+{% block content %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+<div class="container mt-4">
+    <div class="row row-cols-4 g-4 align-items-stretch">
+        {% for product in products %}
+        <div class="col d-flex">
+            <a href="/products/{{product.id}}" class="text-decoration-none text-dark">
+                <div class="card h-100 border-0 bg-light shadow" >
+                    <img src="{{product.image.url}}" class="card-img-top rounded-4 p-2 object-fit-cover" style="height: 150px;width:100%;" alt="{{product.title}}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{product.title}}</h5>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"> Price: {{product.price}}</li>
+                        <li class="list-group-item">Stock: {{product.stock}}</li>
+                    </ul>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

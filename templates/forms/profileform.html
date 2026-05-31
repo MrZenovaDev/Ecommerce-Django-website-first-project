@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+{% load static %}
+<style>
+
+body{
+    background-image: url('{% static "images/profilebody.jpg" %}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+</style>
+<section class="min-vh-100">
+    <div class="container h-100 ">
+        <div class="row d-flex justify-content-center mt-5 h-100 " >
+            <div class="w-100" style="max-width: 700px;">
+                <div class="card shadow-lg rounded-4 p-4" style="border:2px black solid">
+                    <form method="POST" class="me-4 ms-4 mr-4">
+                        {% csrf_token %}
+                        {{form.as_p}}
+                        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
