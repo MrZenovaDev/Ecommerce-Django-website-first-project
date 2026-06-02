@@ -124,8 +124,12 @@ STATIC_URL = 'static/'
 MEDIA_URL= '/media/'
 MEDIA_ROOT= BASE_DIR / 'media'
 
+LOGIN_REDIRECT_URL="/products/"
+LOGOUT_REDIRECT_URL="/products/"
+STATIC_URL = '/static/'
+
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
-LOGIN_REDIRECT_URL="/products/"
-LOGOUT_REDIRECT_URL="/products/"
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
