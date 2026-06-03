@@ -30,10 +30,9 @@
                     <button type="submit" class="btn btn-link nav-link">Logout</button>
                 </li>
             </form>
-            <form method="post" action="{% url 'profileform' %}">
-                {% csrf_token %}
-                <li><button type="submit" class="btn btn-link nav-link">Profile</button></li>
-            </form>
+            <a href="{% url 'profileform' %}" class="btn btn-link text-decoration-none ">
+                Profile
+            </a>
             <form method="post" action="{% url 'ordereditems' %}">
                 {% csrf_token %}
                 <li><button type="submit" class="btn btn-link nav-link">Ordered Items</button></li>
