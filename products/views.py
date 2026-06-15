@@ -4,10 +4,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from accounts.models import UserProfile
 from django.views.decorators.cache import never_cache
+from django.http import JsonResponse
 # Create your views here.
 @never_cache
 def product_list(request):
-    products=Product.objects.filter(stock__gt=0)
+    products=Product.objects.all()
     return render(request,'products/Productlist.html',{'products':products})
 @never_cache
 def product_detail(request,id):
@@ -15,16 +16,21 @@ def product_detail(request,id):
     return render(request,'products/productdetail.html',{'product':product})
 @login_required
 def add_to_cart(request,id):
-    if not request.user.is_authenticated:
-        messages.warning(request,'You have to signup or login before adding products to cart!')
-        return redirect(f'accounts/login/?next=/products/{id}/')
-    product=Product.objects.get(id=id)
-    cart,created=Cart.objects.get_or_create(user=request.user)
-    cartitems,created=CartItem.objects.get_or_create(product=product,cart=cart)
-    cartitems.quantity+=1
-    cartitems.save()
-    messages.success(request,"Item has been added to cart")
-    return redirect('product_detail',id=id)
+    print(request.method)
+    if request.method=='POST':
+        if not request.user.is_authenticated:
+            return JsonResponse({'success':False,'error':'unAuthenticated'})
+        product=Product.objects.get(id=id)
+        if not product.stock<=0:
+            cart,created=Cart.objects.get_or_create(user=request.user)
+            cartitems,created=CartItem.objects.get_or_create(product=product,cart=cart)
+            cartitems.quantity+=1
+            cartitems.save()
+            return JsonResponse({'success':True})
+        else:
+            return JsonResponse({"success":False,'error':'noStock'})
+    else:
+        return JsonResponse({'success':False,'error':'Invalid request'})
 
 @login_required
 def go_to_cart(request):
@@ -33,21 +39,23 @@ def go_to_cart(request):
     return render(request,'products/cart.html',{'cartitems':cartitems})
 
 def placeorder(request):
-    if UserProfile.objects.filter(user=request.user).exists():
-        profile=UserProfile.objects.get(user=request.user)
-        order=Order.objects.create(user=request.user,adress=profile.adress)
-        cart=Cart.objects.get(user=request.user)
-        cartitems=CartItem.objects.filter(cart=cart)
-        for item in cartitems:
-            OrderItem.objects.create(order=order,product=item.product,quantity=item.quantity)
-            item.product.stock-=item.quantity
-            item.product.save()
-        cartitems.delete()
-        messages.success(request,'Orders have been placed!')
-        return redirect('go_to_cart')
+    if request.method=='POST':
+        if UserProfile.objects.filter(user=request.user).exclude(address='').exists():
+            print(request.method)
+            profile=UserProfile.objects.get(user=request.user)
+            order=Order.objects.create(user=request.user,address=profile.address)
+            cart=Cart.objects.get(user=request.user)
+            cartitems=CartItem.objects.filter(cart=cart)
+            for item in cartitems:
+                OrderItem.objects.create(order=order,product=item.product,quantity=item.quantity)
+                item.product.stock-=item.quantity
+                item.product.save()
+            cartitems.delete()
+            return JsonResponse({'success':True})
+        else:
+            return JsonResponse({'success':False,'error':'Profile not created'})
     else:
-        messages.warning(request,'You need to have a valid profile before buying items!')
-        return redirect('go_to_cart')
+        return JsonResponse({'success':False,'error':'Invalid request'})
 
 @login_required
 def go_to_ordereditems(request):
@@ -56,17 +64,24 @@ def go_to_ordereditems(request):
 
 @login_required
 def buy_item(request,id):
-    if UserProfile.objects.filter(user=request.user).exists():
-        profile=UserProfile.objects.get(user=request.user)
-        order=Order.objects.create(user=request.user,adress=profile.adress)
-        product=Product.objects.get(id=id)
-        OrderItem.objects.create(order=order,product=product,quantity=1)
-        product.stock-=1
-        product.save()
-        messages.success(request,'Order has been placed!')
-        return redirect('product_list')
+    print(request.method)
+    if request.method=='POST':
+        if UserProfile.objects.filter(user=request.user).exists():
+            profile=UserProfile.objects.get(user=request.user)
+            order=Order.objects.create(user=request.user,address=profile.address)
+            product=Product.objects.get(id=id)
+            if not product.stock<=0:
+                OrderItem.objects.create(order=order,product=product,quantity=1)
+                product.stock-=1
+                product.save()
+                messages.success(request,'Order has been placed!')
+                return JsonResponse({'success':True,'new_stock':product.stock})
+            else:
+                return JsonResponse({'success':False,'error':'Out of stock!'})
+        else:
+            messages.warning(request,'You have to signup or login before adding products to cart!')
+            return JsonResponse({'success':False,'error':'Please complete your profile first!'})
     else:
-        messages.warning(request,'You have to signup or login before adding products to cart!')
-        return redirect(f'accounts/login/?next=/products/{id}/')
+        return JsonResponse({'success':False,'error':'Invalid request!'})
 def home(request):
     return render(request,'products/home.html')

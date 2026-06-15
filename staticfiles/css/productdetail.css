@@ -1,0 +1,25 @@
+#cartbtn {
+    transition:all 0.5s;
+}
+#cartbtn:hover {
+    transform: scale(1.2);
+}
+.btn-active {
+    background-color:gold;
+    font-family:poppins;
+    color:white;
+    
+}
+#buy-btn {
+    transition:all 0.5s;
+    background:whitesmoke;
+}
+#buy-btn:hover {
+    transform: scale(1.2);
+}
+.success {
+    background-color:honeydew;
+    font-family: poppins;
+    color:black;
+
+}

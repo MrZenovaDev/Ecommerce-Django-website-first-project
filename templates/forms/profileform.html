@@ -11,6 +11,50 @@ body{
     background-repeat: no-repeat;
     min-height: 100vh;
 }
+.card {
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.form-label {
+    color: white;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: white;
+    border-radius: 10px;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.7);
+    color: white;
+    box-shadow: none;
+}
+
+.btn-primary {
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    border-radius: 10px;
+    padding: 8px 28px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-primary:hover {
+    background: rgba(255, 255, 255, 0.4);
+    border-color: white;
+}
 </style>
 <section class="min-vh-100">
     <div class="container h-100 ">
@@ -19,12 +63,18 @@ body{
                 <div class="card shadow-lg rounded-4 p-4" style="border:2px black solid">
                     <form method="POST" class="me-4 ms-4 mr-4">
                         {% csrf_token %}
-                        {{form.as_p}}
-                        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                        <input type="hidden" name="next" value="{{ request.GET.next }}">
+                        <div class="mb-3">
+                            <label for="id_address" class="form-label">Address</label>
+                            <textarea class="form-control" id="id_address" name="address" rows="3" placeholder="Enter your address">{{ form.adress.value }}</textarea>
+                        </div>
+                        <p id="error-msg" style="color:red;"></p>
+                        <button type="submit" class="btn btn-primary mt-3" id="SubmitBtn">Submit</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<script src="{% static 'js/profile.js' %}"></script>
 {% endblock %}

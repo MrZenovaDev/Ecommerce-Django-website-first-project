@@ -15,7 +15,7 @@ class CartItem(models.Model):
     quantity=models.IntegerField(default=0)
 class Order(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
-    adress=models.TextField(max_length=50)
+    address=models.TextField(max_length=50)
     placed_at=models.DateTimeField(auto_now_add=True)
     status=models.CharField(max_length=10,default='Pending')
 class OrderItem(models.Model):

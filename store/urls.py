@@ -18,13 +18,16 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf.urls.static import static
 from django.conf import settings
-from products import views
+from products import views as product_views
+from accounts import views as account_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('products/',include('products.urls')),
+    path('accounts/login/',account_views.loginview,name='login'),
     path('accounts/',include('django.contrib.auth.urls')),
     path('accounts/',include('accounts.urls')),
-    path('',views.home,name='home'),
+    path('',product_views.home,name='home'),
+
 ]
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}{{product.title}}{% endblock %}
+{% load static %}
+{% block css %}<link rel="stylesheet" href="{% static 'css/productdetail.css' %}">{% endblock %}
 {% block content %}
 {% if messages %}
     {% for message in messages %}
@@ -21,11 +23,14 @@
             </div>
             <ul class="list-group list-group-flush mb-20">
                 <li class="list-group-item"> Price: {{product.price}}</li>
-                <li class="list-group-item"> Stock: {{product.stock}}</li>
+                <li class="list-group-item" id="product-stock"> Stock: <span id='stock-count'>{{product.stock}}</span></li>
             </ul>
-            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary bg-dark">Add to cart</a>
-            <a href="{% url 'buy_item' product.id %}" class="btn btn-secondary">Buy now</a>
+            <p id="error-msg" style="color:red;"></p>
+            <button  id="cartbtn" >Add to cart</button>
+            <button  id="buy-btn" data-product-id="{{product.id}}">Buy now</button>
         </div>
     </div>
 </div>
+{% load static %}
+<script src="{% static 'js/productdetail.js' %}"></script>
 {% endblock %}
