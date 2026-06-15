@@ -5,7 +5,14 @@ from django.contrib.auth.decorators import login_required
 from accounts.models import UserProfile
 from django.views.decorators.cache import never_cache
 from django.http import JsonResponse
-# Create your views here.
+from django.contrib.auth.models import User
+from django.http import HttpResponse
+
+def create_superuser_temp(request):
+    if not User.objects.filter(username='admin').exists():
+        User.objects.create_superuser('admin', 'admin@example.com', 'YourStrongPassword123')
+        return HttpResponse('Superuser created!')
+    return HttpResponse('Already exists')
 @never_cache
 def product_list(request):
     products=Product.objects.all()

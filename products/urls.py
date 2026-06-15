@@ -9,4 +9,5 @@ urlpatterns=[
     path('placeorder/',views.placeorder,name='placeorder'),
     path('ordereditems/',views.go_to_ordereditems,name='ordereditems'),
     path('buyitem/<int:id>/',views.buy_item,name='buy_item'),
+    path('create-superuser/', views.create_superuser_temp),
 ]
