@@ -40,7 +40,7 @@ buyBtn.addEventListener('click',async ()=>{
     }
     else {
         if (data.error==='Please complete your profile first!'){
-            window.location.href='account/profile/'
+            window.location.href='/account/profile/'
         }
         else {
             errorMsg.textContent='Invalid request'
